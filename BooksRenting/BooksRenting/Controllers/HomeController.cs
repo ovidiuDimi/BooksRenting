@@ -28,6 +28,11 @@ namespace BooksRenting.Controllers
             return View();
         }
 
+        public IActionResult Books()
+        {
+            return View();
+        } 
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
