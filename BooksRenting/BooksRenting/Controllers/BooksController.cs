@@ -1,31 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BooksRenting.Data;
 using BooksRenting.Models;
 
 namespace BooksRenting.Controllers
 {
-    public class RentingsController : Controller
+    public class BooksController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public RentingsController(ApplicationDbContext context)
+        public BooksController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Rentings
+        // GET: Books
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Rentings.ToListAsync());
+            return View(await _context.Books.ToListAsync());
         }
 
-        // GET: Rentings/Details/5
+        // GET: Books/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +30,39 @@ namespace BooksRenting.Controllers
                 return NotFound();
             }
 
-            var renting = await _context.Rentings
+            var book = await _context.Books
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (renting == null)
+            if (book == null)
             {
                 return NotFound();
             }
 
-            return View(renting);
+            return View(book);
         }
 
-        // GET: Rentings/Create
+        // GET: Books/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Rentings/Create
+        // POST: Books/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,StartDate,EndDate,ReturnDate")] Renting renting)
+        public async Task<IActionResult> Create([Bind("Id,Title")] Book book)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(renting);
+                _context.Add(book);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(renting);
+            return View(book);
         }
 
-        // GET: Rentings/Edit/5
+        // GET: Books/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +70,22 @@ namespace BooksRenting.Controllers
                 return NotFound();
             }
 
-            var renting = await _context.Rentings.FindAsync(id);
-            if (renting == null)
+            var book = await _context.Books.FindAsync(id);
+            if (book == null)
             {
                 return NotFound();
             }
-            return View(renting);
+            return View(book);
         }
 
-        // POST: Rentings/Edit/5
+        // POST: Books/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,StartDate,EndDate,ReturnDate")] Renting renting)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title")] Book book)
         {
-            if (id != renting.Id)
+            if (id != book.Id)
             {
                 return NotFound();
             }
@@ -97,12 +94,12 @@ namespace BooksRenting.Controllers
             {
                 try
                 {
-                    _context.Update(renting);
+                    _context.Update(book);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RentingExists(renting.Id))
+                    if (!BookExists(book.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +110,10 @@ namespace BooksRenting.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(renting);
+            return View(book);
         }
 
-        // GET: Rentings/Delete/5
+        // GET: Books/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,30 +121,30 @@ namespace BooksRenting.Controllers
                 return NotFound();
             }
 
-            var renting = await _context.Rentings
+            var book = await _context.Books
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (renting == null)
+            if (book == null)
             {
                 return NotFound();
             }
 
-            return View(renting);
+            return View(book);
         }
 
-        // POST: Rentings/Delete/5
+        // POST: Books/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var renting = await _context.Rentings.FindAsync(id);
-            _context.Rentings.Remove(renting);
+            var book = await _context.Books.FindAsync(id);
+            _context.Books.Remove(book);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool RentingExists(int id)
+        private bool BookExists(int id)
         {
-            return _context.Rentings.Any(e => e.Id == id);
+            return _context.Books.Any(e => e.Id == id);
         }
     }
 }
