@@ -19,7 +19,8 @@ namespace BooksRenting.Controllers
         // GET: Books
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Books.ToListAsync());
+            var listOfBooks= await _context.Books.Include(b => b.Author).Include(b => b.Category).ToListAsync();
+            return View(listOfBooks);
         }
 
         // GET: Books/Details/5
