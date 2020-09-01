@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BooksRenting.Models;
@@ -27,6 +23,11 @@ namespace BooksRenting.Controllers
         {
             return View();
         }
+
+        public IActionResult Books()
+        {
+            return View();
+        } 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
