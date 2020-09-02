@@ -101,9 +101,11 @@ namespace BooksRenting.Controllers
                 return NotFound();
             }
 
-            book = new Book();
-            book.AvailableAuthors = await _context.Authors.ToListAsync();
-            book.AvailableCategories = await _context.Categories.ToListAsync();
+            book = new Book
+            {
+                AvailableAuthors = await _context.Authors.ToListAsync(),
+                AvailableCategories = await _context.Categories.ToListAsync()
+            };
             return View(book);
         }
 
