@@ -30,14 +30,17 @@ namespace BooksRenting.Controllers
             {
                 return NotFound();
             }
-
-            var book = await _context.Books
+            var book = new Book();
+            book.AvailableAuthors = await _context.Authors.ToListAsync();
+            book.AvailableCategories = await _context.Categories.ToListAsync();
+            book = await _context.Books
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (book == null)
             {
                 return NotFound();
             }
-
+            var selectedAuthor = await _context.Authors.FirstOrDefaultAsync(a => a.Id == book.SelectedAuthorId);
+            var selectedCategory = await _context.Categories.FirstOrDefaultAsync(c => c.Id == book.SelectedCategoryId);
             return View(book);
         }
 
@@ -47,7 +50,6 @@ namespace BooksRenting.Controllers
             var book = new Book();
             book.AvailableAuthors = await _context.Authors.ToListAsync();
             book.AvailableCategories= await _context.Categories.ToListAsync();
-
             return View(book);
         }
 
