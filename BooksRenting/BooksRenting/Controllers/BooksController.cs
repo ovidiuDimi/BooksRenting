@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BooksRenting.Data;
 using BooksRenting.Models;
+using System;
 
 namespace BooksRenting.Controllers
 {
@@ -88,15 +89,14 @@ namespace BooksRenting.Controllers
         // GET: Books/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            
+            var book = new Book();
+            book.AvailableAuthors = await _context.Authors.ToListAsync();
+            book.AvailableCategories = await _context.Categories.ToListAsync();
             if (id == null)
             {
                 return NotFound();
             }
 
-            var book = new Book();
-            book.AvailableAuthors = await _context.Authors.ToListAsync();
-            book.AvailableCategories = await _context.Categories.ToListAsync();
             book = await _context.Books.FindAsync(id);
             if (book == null)
             {
@@ -112,6 +112,20 @@ namespace BooksRenting.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,SelectedAuthorId,SelectedCategoryId")] Book book)
         {
+            var selectedAuthor = await _context.Authors.FirstOrDefaultAsync(a => a.Id == book.SelectedAuthorId);
+            if (selectedAuthor is null)
+            {
+                ModelState.AddModelError("SelectedAuthorId", "Cannot find the Author");
+                return View(book);
+            }
+
+            var selectedCategory = await _context.Categories.FirstOrDefaultAsync(c => c.Id == book.SelectedCategoryId);
+            if (selectedCategory is null)
+            {
+                ModelState.AddModelError("SelectedCategoryId", "Cannot find the Category");
+                return View(book);
+            }
+
             if (id != book.Id)
             {
                 return NotFound();
@@ -121,25 +135,23 @@ namespace BooksRenting.Controllers
             {
                 try
                 {
-                    var selectedAuthor = await _context.Authors.FirstOrDefaultAsync(a => a.Id == book.SelectedAuthorId);
-                    if (selectedAuthor is null)
-                    {
-                        ModelState.AddModelError("SelectedAuthorId", "Cannot find the Author");
-                        return View(book);
-                    }
-
-                    var selectedCategory = await _context.Categories.FirstOrDefaultAsync(c => c.Id == book.SelectedCategoryId);
-                    if (selectedCategory is null)
-                    {
-                        ModelState.AddModelError("SelectedCategoryId", "Cannot find the Category");
-                        return View(book);
-                    }
+                    book.Author = selectedAuthor;
+                    book.Category = selectedCategory;
                     _context.Update(book);
                     await _context.SaveChangesAsync();
                 }
+
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!BookExists(book.Id))
+                    {
+                        return NotFound();
+                    }
+                    if (!BookExists(book.Category))
+                    {
+                        return NotFound();
+                    }
+                    if (!BookExists(book.Author))
                     {
                         return NotFound();
                     }
@@ -151,6 +163,16 @@ namespace BooksRenting.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(book);
+        }
+
+        private bool BookExists(Author author)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool BookExists(Category category)
+        {
+            throw new NotImplementedException();
         }
 
         // GET: Books/Delete/5
