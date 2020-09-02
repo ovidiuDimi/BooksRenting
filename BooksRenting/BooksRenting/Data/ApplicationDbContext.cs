@@ -9,6 +9,8 @@ namespace BooksRenting.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
+        internal readonly object NewAuthors;
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

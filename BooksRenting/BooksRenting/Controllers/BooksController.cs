@@ -87,21 +87,23 @@ namespace BooksRenting.Controllers
         }
 
         // GET: Books/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> EditAsync(int? id)
         {
-            var book = new Book();
-            book.AvailableAuthors = await _context.Authors.ToListAsync();
-            book.AvailableCategories = await _context.Categories.ToListAsync();
+            
             if (id == null)
             {
                 return NotFound();
             }
 
-            book = await _context.Books.FindAsync(id);
+            var book = await _context.Books.FindAsync(id);
             if (book == null)
             {
                 return NotFound();
             }
+
+            book = new Book();
+            book.AvailableAuthors = await _context.Authors.ToListAsync();
+            book.AvailableCategories = await _context.Categories.ToListAsync();
             return View(book);
         }
 
@@ -146,15 +148,7 @@ namespace BooksRenting.Controllers
                     if (!BookExists(book.Id))
                     {
                         return NotFound();
-                    }
-                    if (!BookExists(book.Category))
-                    {
-                        return NotFound();
-                    }
-                    if (!BookExists(book.Author))
-                    {
-                        return NotFound();
-                    }
+                    }                    
                     else
                     {
                         throw;
@@ -163,11 +157,6 @@ namespace BooksRenting.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(book);
-        }
-
-        private bool BookExists(Author author)
-        {
-            throw new NotImplementedException();
         }
 
         private bool BookExists(Category category)

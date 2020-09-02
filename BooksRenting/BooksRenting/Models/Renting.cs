@@ -28,5 +28,15 @@ namespace BooksRenting.Models
 
         [ForeignKey("UserId")]
         public IdentityUser User { get; set; }
+
+        [NotMapped]
+        public List<Book> AvailableBook { get; set; } = new List<Book>();
+
+        [Required]
+        [NotMapped]
+        [Display(Name = "Select Author")]
+        public int SelectedBookId { get; set; }
+
+
     }
 }
