@@ -24,6 +24,6 @@ namespace BooksRenting.Data
         public DbSet<Book> Books { get; set; }
 
         public DbSet<Renting> Rentings { get; set; }
-
+        public object Title { get; internal set; }
     }
 }

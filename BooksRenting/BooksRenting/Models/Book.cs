@@ -39,21 +39,5 @@ namespace BooksRenting.Models
         [NotMapped]
         [Display(Name = "Select Category")]
         public int SelectedCategoryId { get; set; }
-
-        [NotMapped]
-        public List<Author> NewAuthors { get; set; } = new List<Author>();
-
-        [Required]
-        [NotMapped]
-        [Display(Name = "New Author")]
-        public int NewAuthorId { get; set; }
-
-        [NotMapped]
-        public List<Category> NewCategories { get; set; } = new List<Category>();
-
-        [Required]
-        [NotMapped]
-        [Display(Name = "New Category")]
-        public int NewCategoryId { get; set; }
     }
 }

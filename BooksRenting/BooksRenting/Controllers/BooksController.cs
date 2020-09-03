@@ -12,6 +12,8 @@ namespace BooksRenting.Controllers
     {
         private readonly ApplicationDbContext _context;
 
+        public object Title { get; private set; }
+
         public BooksController(ApplicationDbContext context)
         {
             _context = context;
@@ -62,7 +64,8 @@ namespace BooksRenting.Controllers
         public async Task<IActionResult> Create([Bind("Id,Title,SelectedAuthorId,SelectedCategoryId")] Book book)
         {
             if (ModelState.IsValid)
-            {
+            {               
+               
                 var selectedAuthor = await _context.Authors.FirstOrDefaultAsync(a => a.Id == book.SelectedAuthorId);
                 if(selectedAuthor is null)
                 {
