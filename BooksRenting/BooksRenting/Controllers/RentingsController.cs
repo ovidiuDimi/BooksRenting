@@ -19,6 +19,7 @@ namespace BooksRenting.Controllers
         // GET: Rentings
         public async Task<IActionResult> Index()
         {
+            var listOfBooks = await _context.Rentings.Include(b => b.AvailableBook).ToListAsync();
             return View(await _context.Rentings.ToListAsync());
         }
 
@@ -43,6 +44,8 @@ namespace BooksRenting.Controllers
         // GET: Rentings/Create
         public IActionResult Create()
         {
+            var book = new Book();
+            
             return View();
         }
 

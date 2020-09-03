@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BooksRenting.Models
 {
@@ -39,5 +36,5 @@ namespace BooksRenting.Models
         [NotMapped]
         [Display(Name = "Select Category")]
         public int SelectedCategoryId { get; set; }
-    }
+    }       
 }

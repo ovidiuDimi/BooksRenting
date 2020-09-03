@@ -27,7 +27,7 @@ namespace BooksRenting.Controllers
         }
 
         // GET: Books/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> DetailsAsync(int? id)
         {
             if (id == null)
             {

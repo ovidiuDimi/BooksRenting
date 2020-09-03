@@ -34,7 +34,7 @@ namespace BooksRenting.Models
 
         [Required]
         [NotMapped]
-        [Display(Name = "Select Author")]
+        [Display(Name = "Select Book")]
         public int SelectedBookId { get; set; }
 
 
