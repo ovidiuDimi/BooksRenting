@@ -30,7 +30,7 @@ namespace BooksRenting.Models
         public IdentityUser User { get; set; }
 
         [NotMapped]
-        public List<Book> AvailableBook { get; set; } = new List<Book>();
+        public List<Book> AvailableBooks { get; set; } = new List<Book>();
 
         [Required]
         [NotMapped]

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BooksRenting.Data;
 using BooksRenting.Models;
+using System;
 
 namespace BooksRenting.Controllers
 {
@@ -19,8 +20,8 @@ namespace BooksRenting.Controllers
         // GET: Rentings
         public async Task<IActionResult> Index()
         {
-            var listOfBooks = await _context.Rentings.Include(b => b.AvailableBook).ToListAsync();
-            return View(await _context.Rentings.ToListAsync());
+            var rentings = await _context.Rentings.Include(r => r.Book).ToListAsync();
+            return View(rentings);
         }
 
         // GET: Rentings/Details/5
@@ -42,11 +43,14 @@ namespace BooksRenting.Controllers
         }
 
         // GET: Rentings/Create
-        public IActionResult Create()
+        public async Task<IActionResult> CreateAsync()
         {
-            var book = new Book();
+            var renting = new Renting();
+            renting.StartDate = DateTime.Today;
+            renting.EndDate = DateTime.Today.AddDays(15);
+            renting.AvailableBooks = await _context.Books.ToListAsync();
             
-            return View();
+            return View(renting);
         }
 
         // POST: Rentings/Create
@@ -54,10 +58,18 @@ namespace BooksRenting.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,StartDate,EndDate,ReturnDate")] Renting renting)
+        public async Task<IActionResult> Create([Bind("Id,StartDate,EndDate,ReturnDate,SelectedBookId")] Renting renting)
         {
             if (ModelState.IsValid)
             {
+                var selectedBook = await _context.Books.FirstOrDefaultAsync(b => b.Id == renting.SelectedBookId);
+                if (selectedBook is null)
+                {
+                    ModelState.AddModelError("SelectedBookId", "Cannot find the Book");
+                    return View(renting);
+                }
+
+                renting.Book = selectedBook;
                 _context.Add(renting);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -119,6 +131,7 @@ namespace BooksRenting.Controllers
         // GET: Rentings/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+
             if (id == null)
             {
                 return NotFound();

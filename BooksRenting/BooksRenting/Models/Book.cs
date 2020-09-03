@@ -6,9 +6,6 @@ namespace BooksRenting.Models
 {
     public class Book
     {
-        internal object NewCategory;
-        private int newCategoryId;
-
         [Key]
         public int Id { get; set; }
 
