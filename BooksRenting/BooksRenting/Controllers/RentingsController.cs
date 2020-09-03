@@ -31,8 +31,9 @@ namespace BooksRenting.Controllers
             {
                 return NotFound();
             }
-
-            var renting = await _context.Rentings
+            var renting = new Renting();
+            renting.AvailableBooks = await _context.Books.ToListAsync();
+            renting = await _context.Rentings
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (renting == null)
             {
@@ -90,6 +91,9 @@ namespace BooksRenting.Controllers
             {
                 return NotFound();
             }
+            renting.StartDate = DateTime.Today;
+            renting.EndDate = DateTime.Today.AddDays(15);
+            renting = new Renting { AvailableBooks = await _context.Books.ToListAsync() };
             return View(renting);
         }
 
@@ -100,6 +104,13 @@ namespace BooksRenting.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,StartDate,EndDate,ReturnDate")] Renting renting)
         {
+            var selectedBook = await _context.Books.FirstOrDefaultAsync(b => b.Id == renting.SelectedBookId);            
+            if (selectedBook is null)
+            {
+                ModelState.AddModelError("SelectedBookId", "Cannot find the Book");
+                return View(renting);
+            }
+
             if (id != renting.Id)
             {
                 return NotFound();
@@ -109,6 +120,9 @@ namespace BooksRenting.Controllers
             {
                 try
                 {
+
+                    renting.Book = selectedBook;
+                    _context.Add(renting);
                     _context.Update(renting);
                     await _context.SaveChangesAsync();
                 }
