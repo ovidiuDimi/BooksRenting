@@ -137,6 +137,14 @@ namespace BooksRenting.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var category = await _context.Categories.FindAsync(id);
+
+            var categoryHasBooks = await _context.Books.Include(b => b.Category).AnyAsync(b => b.Category.Id == id);
+            if (categoryHasBooks)
+            {
+                ModelState.AddModelError("", "Category is referenced by existing books and cannot be deleted. Delete the books first, then try again.");
+                return View(category);
+            }
+
             _context.Categories.Remove(category);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

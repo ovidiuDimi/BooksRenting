@@ -81,7 +81,11 @@ namespace BooksRenting.Areas.Identity.Pages.Account
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                    var autoConfirmResult = await _userManager.ConfirmEmailAsync(user, code);
+
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,

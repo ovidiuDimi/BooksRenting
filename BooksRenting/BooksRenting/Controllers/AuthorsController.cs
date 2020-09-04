@@ -140,6 +140,14 @@ namespace BooksRenting.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var author = await _context.Authors.FindAsync(id);
+
+            var authorHasBooks = await _context.Books.Include(b => b.Author).AnyAsync(b => b.Author.Id == id);
+            if (authorHasBooks)
+            {
+                ModelState.AddModelError("", "Author is referenced by existing books and cannot be deleted. Delete the books first, then try again.");
+                return View(author);
+            }
+
             _context.Authors.Remove(author);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

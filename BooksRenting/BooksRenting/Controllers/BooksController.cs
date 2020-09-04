@@ -177,8 +177,8 @@ namespace BooksRenting.Controllers
                 return NotFound();
             }
 
-            var book = await _context.Books
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var book = await _context.Books.FirstOrDefaultAsync(m => m.Id == id);
+
             if (book == null)
             {
                 return NotFound();
@@ -193,6 +193,14 @@ namespace BooksRenting.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var book = await _context.Books.FindAsync(id);
+
+            var bookHasRentings = await _context.Rentings.Include(r => r.Book).AnyAsync(r => r.Book.Id == id);
+            if (bookHasRentings)
+            {
+                ModelState.AddModelError("", "Book is already rented and cannot be deleted. Delete the rentings first, then try again.");
+                return View(book);
+            }
+            
             _context.Books.Remove(book);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

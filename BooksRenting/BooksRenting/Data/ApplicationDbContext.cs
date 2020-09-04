@@ -9,13 +9,9 @@ namespace BooksRenting.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
-        internal readonly object NewAuthors;
-        internal object Book;
-
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-
         }
 
         public DbSet<Category> Categories { get; set; }
@@ -25,6 +21,5 @@ namespace BooksRenting.Data
         public DbSet<Book> Books { get; set; }
 
         public DbSet<Renting> Rentings { get; set; }
-        public object Title { get; internal set; }
     }
 }
