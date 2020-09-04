@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BooksRenting.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BooksRenting.Controllers
 {
@@ -13,6 +14,7 @@ namespace BooksRenting.Controllers
         {
             _logger = logger;
         }
+        [AllowAnonymous]
 
         public IActionResult Index()
         {
