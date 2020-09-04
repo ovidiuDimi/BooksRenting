@@ -157,7 +157,7 @@ namespace BooksRenting.Controllers
             }
             return RedirectToAction(nameof(Index));
 
-            return View(renting);
+          
         }
 
         private bool RentingExists(DateTime endDate)
