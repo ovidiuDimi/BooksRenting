@@ -137,7 +137,32 @@ namespace BooksRenting.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            try
+            {
+                renting.Book = selectedBook;
+                _context.Add(renting);
+                _context.Update(renting);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!RentingExists(renting.EndDate))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
+
             return View(renting);
+        }
+
+        private bool RentingExists(DateTime endDate)
+        {
+            throw new NotImplementedException();
         }
 
         // GET: Rentings/Delete/5
